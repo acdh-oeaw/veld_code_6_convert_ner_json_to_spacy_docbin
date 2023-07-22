@@ -1,0 +1,28 @@
+#x-veld:
+#  executable:
+#    # TODO: describe CLI paramaters as input too
+#    input:
+#      path: "/veld/input/"
+#      format: "json"
+#      kind:
+#        - "Gold Data"
+#        - "Named Entity Recognition Gold Data"
+#    output:
+#      1:
+#        path: "/veld/output/1/"
+#        format: "Spacy DocBin"
+#        kind:
+#          - "Gold Data"
+#          - "Named Entity Recognition Gold Data"
+#      2:
+#        path: "/veld/output/2/"
+#        format: "log"
+#    scope:
+#      - "ETL"
+
+services:
+  veld:
+    build: .
+    volumes:
+      - ./:/veld/executable/
+    command: python /veld/executable/convert.py
