@@ -25,4 +25,9 @@ services:
     build: .
     volumes:
       - ./:/veld/executable/
-    command: python /veld/executable/convert.py
+    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/2/convert.log"
+    environment:
+      train: 80
+      dev: 10
+      eval: 10
+      seed: 42

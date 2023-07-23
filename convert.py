@@ -1,34 +1,22 @@
 import argparse
 import json
-import logging
+import os
 import random
 
 import spacy
 from spacy.tokens import Span, DocBin
 
 
-def print_and_log(msg):
-    print(msg)
-    logging.debug(msg)
-
-
-def parse_args():
-    print_and_log(f"####################### reading args")
+def parse_env_vars():
+    print(f"####################### reading args")
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train", help="percentage of train data", type=int)
-    parser.add_argument("--dev", help="percentage of dev data", type=int)
-    parser.add_argument("--eval", help="percentage of eval data", type=int)
-    parser.add_argument("--seed", help="percentage of eval data", type=int)
-    args = parser.parse_args()
-    perc_train = args.train
-    perc_dev = args.dev
-    perc_eval = args.eval
-    seed = args.seed
-    print_and_log(
-        f"perc_train: {perc_train}, perc_dev: {perc_dev}, perc_eval: {perc_eval}, seed: {seed}"
-    )
+    perc_train = int(os.environ["train"])
+    perc_dev = int(os.environ["dev"])
+    perc_eval = int(os.environ["eval"])
+    seed = int(os.environ["seed"])
+    print(f"perc_train: {perc_train}, perc_dev: {perc_dev}, perc_eval: {perc_eval}, seed: {seed}")
     if perc_train + perc_dev + perc_eval != 100:
-        print_and_log("Percentages do not sum up to 100. Is that on purpose?")
+        print("Percentages do not sum up to 100. Is that on purpose?")
     return perc_train, perc_dev, perc_eval, seed
     
     
@@ -56,7 +44,7 @@ def read_gold_data(perc_train, perc_dev, perc_eval, seed):
 
 
 def merge_overlapping(gd_list):
-    print_and_log("####################### merging overlapping entities")
+    print("####################### merging overlapping entities")
     for gd in gd_list:
         ent_list = gd["entities"]
         ent_list_new = []
@@ -70,11 +58,11 @@ def merge_overlapping(gd_list):
                         ent_correct = (ent_a[0], ent_a[1], ent_a[2])
                     else:
                         ent_correct = (ent_a[0], ent_b[1], ent_a[2])
-                    print_and_log(
+                    print(
                         f"Found overlap between: {ent_a}, and {ent_b}, merged into {ent_correct}."
                     )
                     if ent_a[2] != ent_b[2]:
-                        print_and_log(
+                        print(
                             f"Found conflicting entities: '{ent_a[2]}' and: '{ent_b[2]}'."
                             f" Took the first one: '{ent_correct[2]}'"
                         )
@@ -109,7 +97,7 @@ def convert_to_docbin(gd_list, nlp):
                     break
             span = Span(doc, token_id_start, token_id_end, ent[2])
             if span.text != text[ent[0]:ent[1]]:
-                print_and_log(
+                print(
                     f"Minor mismatch between original text of assigned entities and their"
                     f" aligned tokens. The tokens will be used for further processing."
                     f" Original sub text: '{text[ent[0]:ent[1]]}', aligned tokens: '{span.text}'"
@@ -137,7 +125,7 @@ def convert_to_docbin(gd_list, nlp):
                 if valid:
                     span_list_deduplicated.append(span)
         if span_list != span_list_deduplicated:
-            print_and_log(
+            print(
                 f"Because of duplication or overlap, span data was converted"
                 f" from: {[s.__repr__() for s in span_list]},"
                 f" into: {[s.__repr__() for s in span_list_deduplicated]}"
@@ -145,7 +133,7 @@ def convert_to_docbin(gd_list, nlp):
         return span_list_deduplicated
     
     def convert_to_docbin_main():
-        print_and_log(f"####################### creating spacy docs and aligning tokens.")
+        print(f"####################### creating spacy docs and aligning tokens.")
         doc_bin = DocBin()
         count_handled = 0
         count_not_handled = 0
@@ -157,11 +145,11 @@ def convert_to_docbin(gd_list, nlp):
                 doc_bin.add(doc)
                 count_handled += 1
             else:
-                print_and_log(
+                print(
                     f"No entities found. Dismissing data. At text: {gd['text_raw'].__repr__()}"
                 )
                 count_not_handled += 1
-        print_and_log(
+        print(
             f"count of converted text-entity rows: {count_handled}, "
             f"count not converted: {count_not_handled}"
         )
@@ -171,17 +159,11 @@ def convert_to_docbin(gd_list, nlp):
     
 
 def main():
-    logging.basicConfig(
-        filename="/veld/output/2/convert.log",
-        filemode='w',
-        level=logging.DEBUG,
-        format="%(message)s",
-    )
-    perc_train, perc_dev, perc_eval, seed = parse_args()
+    perc_train, perc_dev, perc_eval, seed = parse_env_vars()
     gd_all = read_gold_data(perc_train, perc_dev, perc_eval, seed)
     nlp = spacy.load("de_dep_news_trf")
     for gd_name, gd_list in gd_all.items():
-        print_and_log(f"####################### converting {gd_name} data")
+        print(f"####################### converting {gd_name} data")
         gd_list = merge_overlapping(gd_list)
         docbin = convert_to_docbin(gd_list, nlp)
         docbin.to_disk(f"/veld/output/1/{gd_name}.spacy")
