@@ -28,7 +28,7 @@ def parse_args():
         f"perc_train: {perc_train}, perc_dev: {perc_dev}, perc_eval: {perc_eval}, seed: {seed}"
     )
     if perc_train + perc_dev + perc_eval != 100:
-        raise Exception("percentages do not sum up to 100.")
+        print_and_log("Percentages do not sum up to 100. Is that on purpose?")
     return perc_train, perc_dev, perc_eval, seed
     
     
@@ -40,14 +40,18 @@ def read_gold_data(perc_train, perc_dev, perc_eval, seed):
     len_total = len(gd_list)
     cutoff_train = int(len_total / 100 * perc_train)
     cutoff_dev = int(len_total / 100 * (perc_train + perc_dev))
-    cutoff_eval = int(len_total / 100 * (perc_train + perc_dev + perc_eval))
-    assert cutoff_eval in [len_total - 1, len_total, len_total + 1]
+    perc_total = perc_train + perc_dev + perc_eval
+    if perc_total == 100:
+        cutoff_eval = len_total
+    elif perc_total < 100:
+        cutoff_eval = int(len_total / 100 * (perc_total))
+    else:
+        raise Exception(f"Percentages are above 100: {perc_total}")
     gd_all = {
         "train": gd_list[:cutoff_train],
         "dev": gd_list[cutoff_train:cutoff_dev],
-        "eval": gd_list[cutoff_dev:]
+        "eval": gd_list[cutoff_dev:cutoff_eval]
     }
-    assert len(gd_all["train"]) + len(gd_all["dev"]) + len(gd_all["eval"]) == len_total
     return gd_all
 
 
