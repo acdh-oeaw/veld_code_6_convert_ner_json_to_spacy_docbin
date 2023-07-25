@@ -17,25 +17,17 @@ x-veld:
       "2":
         environment variables:
           train:
-            kind: int
-            description: "percentage of data to be used as train data."
+            description: "percentage of data to be used as train data. Defaults to 80."
             optional: true
-            default: 80
           dev:
-            kind: int
-            description: "percentage of data to be used as dev data."
+            description: "percentage of data to be used as dev data. Defaults to 10."
             optional: true
-            default: 10
           eval:
-            kind: int
-            description: "percentage of data to be used as eval data."
+            description: "percentage of data to be used as eval data. Defaults to 10."
             optional: true
-            default: 10
           seed:
-            kind: int
-            description: "A seed for randomizing the data but keeping it stable across executions."
+            description: "A seed for randomizing the data but keeping it stable across executions. Defaults to 42."
             optional: true
-            default: 42
     output:
       1:
         path: "/veld/output/1/"
