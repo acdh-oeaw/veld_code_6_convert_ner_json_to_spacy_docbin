@@ -8,7 +8,7 @@ x-veld:
         - "Machine Learning"
     input:
       "1":
-        path: "/veld/input/"
+        path: "/veld/input/data.json"
         format: "json"
         kind:
           - "Gold Data"
