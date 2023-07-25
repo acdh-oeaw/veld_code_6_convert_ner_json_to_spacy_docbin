@@ -1,30 +1,58 @@
-#x-veld:
-#  executable:
-#    # TODO: describe CLI paramaters as input too
-#    input:
-#      path: "/veld/input/"
-#      format: "json"
-#      kind:
-#        - "Gold Data"
-#        - "Named Entity Recognition Gold Data"
-#    output:
-#      1:
-#        path: "/veld/output/1/"
-#        format: "Spacy DocBin"
-#        kind:
-#          - "Gold Data"
-#          - "Named Entity Recognition Gold Data"
-#      2:
-#        path: "/veld/output/2/"
-#        format: "log"
-#    scope:
-#      - "ETL"
+x-veld:
+  executable:
+    about:
+      description: ""
+      scope:
+        - "ETL"
+        - "NLP"
+        - "Machine Learning"
+    input:
+      "1":
+        path: "/veld/input/"
+        format: "json"
+        kind:
+          - "Gold Data"
+          - "NLP Gold Data"
+          - "Named Entity Recognition Gold Data"
+      "2":
+        environment variables:
+          train:
+            kind: int
+            description: "percentage of data to be used as train data."
+            optional: true
+            default: 80
+          dev:
+            kind: int
+            description: "percentage of data to be used as dev data."
+            optional: true
+            default: 10
+          eval:
+            kind: int
+            description: "percentage of data to be used as eval data."
+            optional: true
+            default: 10
+          seed:
+            kind: int
+            description: "A seed for randomizing the data but keeping it stable across executions."
+            optional: true
+            default: 42
+    output:
+      1:
+        path: "/veld/output/1/"
+        format: "Spacy DocBin"
+        kind:
+          - "Gold Data"
+          - "Named Entity Recognition Gold Data"
+      2:
+        path: "/veld/output/2/"
+        format: "txt"
+        kind: "log"
 
 services:
   veld:
     build: .
     volumes:
-      - ./:/veld/executable/
+      - ./src/:/veld/executable/
     command: bash -c "python /veld/executable/convert.py |& tee /veld/output/2/convert.log"
     environment:
       train: 80
