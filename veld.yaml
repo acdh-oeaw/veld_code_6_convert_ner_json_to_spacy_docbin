@@ -45,10 +45,10 @@ services:
     build: .
     volumes:
       - ./src/:/veld/executable/
-    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/2/convert.log"
     environment:
       train: 80
       dev: 10
       eval: 10
       seed: 42
+    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/2/convert.log"
 
