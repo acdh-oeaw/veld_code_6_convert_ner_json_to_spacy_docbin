@@ -29,13 +29,13 @@ x-veld:
             description: "A seed for randomizing the data but keeping it stable across executions. Defaults to 42."
             optional: true
     output:
-      1:
+      "1":
         path: "/veld/output/1/"
         format: "Spacy DocBin"
         kind:
           - "Gold Data"
           - "Named Entity Recognition Gold Data"
-      2:
+      "2":
         path: "/veld/output/2/"
         format: "txt"
         kind: "log"
