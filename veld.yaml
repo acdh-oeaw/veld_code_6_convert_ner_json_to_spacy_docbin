@@ -34,6 +34,7 @@ x-veld:
         format: "Spacy DocBin"
         kind:
           - "Gold Data"
+          - "NLP Gold Data"
           - "Named Entity Recognition Gold Data"
       "2":
         path: "/veld/output/2/"
