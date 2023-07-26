@@ -1,7 +1,9 @@
 x-veld:
   executable:
     about:
-      description: ""
+      description: >
+        "Converts NER json data to spacy docbin, and prepares it for training by splitting it into 
+        train, dev, eval subsets, and shuffling them randomly."
       scope:
         - "ETL"
         - "NLP"
@@ -14,6 +16,15 @@ x-veld:
           - "Gold Data"
           - "NLP Gold Data"
           - "Named Entity Recognition Gold Data"
+        description: >
+          "The json data needs to be in a format like: 
+          [
+            {
+              'text_raw': 'Turing was born in London.', 
+              'entities': [(0, 6, 'PER'), (19, 25, 'LOC')]
+            },
+            ...
+          ]"
       "2":
         environment variables:
           train:
