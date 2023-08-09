@@ -2,30 +2,18 @@ x-veld:
   executable:
     about:
       description: >
-        "Converts NER json data to spacy docbin, and prepares it for training by splitting it into 
+        "Converts NER json data to spaCy docbin, and prepares it for training by splitting it into 
         train, dev, eval subsets, and shuffling them randomly."
-      content:
+      topic:
         - "ETL"
         - "NLP"
-        - "Machine Learning"
+        - "Machine learning"
     input:
       a:
-        type: "files"
+        type: "file"
         format: "json"
-        content:
-          - "Gold Data"
-          - "NLP Gold Data"
-          - "Named Entity Recognition Gold Data"
+        content: "Named entity recognition gold data"
         path: /veld/input/data.json
-        description: >
-          "The json data needs to be in a format like: 
-          [
-            {
-              'text_raw': 'Turing was born in London.', 
-              'entities': [(0, 6, 'PER'), (19, 25, 'LOC')]
-            },
-            ...
-          ]"
       b:
         type: "environment variable"
         name: "train" 
@@ -49,17 +37,14 @@ x-veld:
     output:
       a:
         type: "folder"
-        format: "Spacy DocBin"
-        content:
-          - "Gold Data"
-          - "NLP Gold Data"
-          - "Named Entity Recognition Gold Data"
+        format: "spaCy DocBin"
+        content: "Named entity recognition gold data"
         path: /veld/output/a/
       b:
-        type: "files"
+        type: "file"
         format: "txt"
         content: "log"
-        path: /veld/output/b/convert.log
+        path: /veld/output/convert.log
 
 services:
   veld:
@@ -71,5 +56,5 @@ services:
       dev: 10
       eval: 10
       seed: 42
-    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/b/convert.log"
+    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/convert.log"
 
