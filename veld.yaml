@@ -56,7 +56,7 @@ services:
   veld:
     build: .
     volumes:
-      - ./src/:/veld/executable/
+      - ./convert.py:/veld/executable/convert.py
     environment:
       train: 80
       dev: 10
