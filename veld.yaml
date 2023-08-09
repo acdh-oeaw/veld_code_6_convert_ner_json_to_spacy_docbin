@@ -9,7 +9,7 @@ x-veld:
         - "NLP"
         - "Machine Learning"
     input:
-      "1":
+      a:
         path: "/veld/input/data.json"
         format: "json"
         kind:
@@ -25,7 +25,7 @@ x-veld:
             },
             ...
           ]"
-      "2":
+      b:
         environment variables:
           train:
             description: "percentage of data to be used as train data. Defaults to 80."
@@ -40,15 +40,15 @@ x-veld:
             description: "A seed for randomizing the data but keeping it stable across executions. Defaults to 42."
             optional: true
     output:
-      "1":
-        path: "/veld/output/1/"
+      a:
+        path: "/veld/output/a/"
         format: "Spacy DocBin"
         kind:
           - "Gold Data"
           - "NLP Gold Data"
           - "Named Entity Recognition Gold Data"
-      "2":
-        path: "/veld/output/2/"
+      b:
+        path: "/veld/output/b/"
         format: "txt"
         kind: "log"
 
@@ -62,5 +62,5 @@ services:
       dev: 10
       eval: 10
       seed: 42
-    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/2/convert.log"
+    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/b/convert.log"
 

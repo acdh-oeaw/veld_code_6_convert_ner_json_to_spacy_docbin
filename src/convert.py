@@ -166,7 +166,7 @@ def main():
         print(f"####################### converting {gd_name} data")
         gd_list = merge_overlapping(gd_list)
         docbin = convert_to_docbin(gd_list, nlp)
-        docbin.to_disk(f"/veld/output/1/{gd_name}.spacy")
+        docbin.to_disk(f"/veld/output/a/{gd_name}.spacy")
     
 
 if __name__ == "__main__":
