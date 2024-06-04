@@ -1,5 +1,5 @@
 x-veld:
-  executable:
+  code:
     about:
       description: >
         "Converts NER json data to spaCy docbin, and prepares it for training by splitting it into 
@@ -50,11 +50,11 @@ services:
   veld:
     build: .
     volumes:
-      - ./convert.py:/veld/executable/convert.py
+      - ./convert.py:/veld/code/convert.py
     environment:
       train: 80
       dev: 10
       eval: 10
       seed: 42
-    command: bash -c "python /veld/executable/convert.py |& tee /veld/output/convert.log"
+    command: bash -c "python /veld/code/convert.py |& tee /veld/output/convert.log"
 
