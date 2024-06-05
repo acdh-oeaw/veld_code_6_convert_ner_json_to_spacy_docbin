@@ -1,32 +1,30 @@
 x-veld:
   code:
     about:
-      description: >
-        "Converts NER json data to spaCy docbin, and prepares it for training by splitting it into 
-        train, dev, eval subsets, and shuffling them randomly."
-      topic:
+      description: "Converts NER json data to spaCy docbin, and prepares it for training by
+        splitting it into train, dev, eval subsets, and shuffling them randomly."
+      topics:
         - "ETL"
         - "NLP"
         - "Machine learning"
-    input:
+    inputs:
       -
-        type: "file"
-        format: "json"
-        content: "Named entity recognition gold data"
+        fiel_type: "json"
+        contents: "NER gold data"
         path: /veld/input/data.json
       -
         type: "environment variable"
-        name: "train" 
+        name: "percentage_train" 
         optional: true
         default: 80
       -
         type: "environment variable"
-        name: "dev" 
+        name: "percentage_dev" 
         optional: true
         default: 10
       -
         type: "environment variable"
-        name: "eval" 
+        name: "percentage_eval" 
         optional: true
         default: 10
       -
@@ -34,27 +32,25 @@ x-veld:
         name: "seed" 
         optional: true
         default: 42
-    output:
+    outputs:
       -
-        type: "folder"
-        format: "spaCy DocBin"
-        content: "Named entity recognition gold data"
+        file_formats: "spacy docbin"
+        contents: "NER gold data"
         path: /veld/output/a/
       -
-        type: "file"
-        format: "txt"
-        content: "log"
+        file_formats: "txt"
+        contents: "logging"
         path: /veld/output/convert.log
 
 services:
   veld:
     build: .
+    command: bash -c "python /veld/code/convert.py |& tee /veld/output/convert.log"
     volumes:
       - ./convert.py:/veld/code/convert.py
     environment:
-      train: 80
-      dev: 10
-      eval: 10
+      percentage_train: 80
+      percentage_dev: 10
+      percentage_eval: 10
       seed: 42
-    command: bash -c "python /veld/code/convert.py |& tee /veld/output/convert.log"
 
